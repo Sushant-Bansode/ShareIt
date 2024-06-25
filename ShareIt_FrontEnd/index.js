@@ -14,15 +14,13 @@ const fileURL = document.querySelector("#fileURL");
 const emailForm = document.querySelector("#emailForm");
 
 const toast = document.querySelector(".toast");
-
-const baseURL = "http://localhost:3001";
+const baseURL = "https://shareit-backend-t4vw.onrender.com";
 const uploadURL = `${baseURL}/api/files`;
 const emailURL = `${baseURL}/api/files/send`;
 
 const maxAllowedSize = 100 * 1024 * 1024 * 1024; //1000mb
 
-browseBtn.addEventListener("click", (e) => {
-  e.preventDefault();
+browseBtn.addEventListener("click", () => {
   fileInput.click();
 });
 
@@ -35,7 +33,7 @@ dropZone.addEventListener("drop", (e) => {
       fileInput.files = files;
       uploadFile();
     } else {
-      showToast("Max file size is 1000MB");
+      showToast("Max file size is 100MB");
     }
   } else if (files.length > 1) {
     showToast("You can't upload multiple files");
@@ -51,17 +49,15 @@ dropZone.addEventListener("dragover", (e) => {
 });
 
 dropZone.addEventListener("dragleave", (e) => {
-  e.preventDefault();
   dropZone.classList.remove("dragged");
 
   console.log("drag ended");
 });
 
 // file input change and uploader
-fileInput.addEventListener("change", (e) => {
-  e.preventDefault();
+fileInput.addEventListener("change", () => {
   if (fileInput.files[0].size > maxAllowedSize) {
-    showToast("Max file size is 1GB");
+    showToast("Max file size is 100MB");
     fileInput.value = ""; // reset the input
     return;
   }
@@ -69,26 +65,23 @@ fileInput.addEventListener("change", (e) => {
 });
 
 // sharing container listenrs
-copyURLBtn.addEventListener("click", (e) => {
-  e.preventDefault();
+copyURLBtn.addEventListener("click", () => {
   fileURL.select();
   document.execCommand("copy");
   showToast("Copied to clipboard");
 });
 
-fileURL.addEventListener("click", (e) => {
-  e.preventDefault();
+fileURL.addEventListener("click", () => {
   fileURL.select();
 });
 
-const uploadFile = (e) => {
-  e.preventDefault();
+const uploadFile = () => {
   console.log("file added uploading");
 
   files = fileInput.files;
   const formData = new FormData();
   formData.append("myfile", files[0]);
-
+  //hello
   //show the uploader
   progressContainer.style.display = "block";
 
@@ -98,7 +91,6 @@ const uploadFile = (e) => {
   // listen for upload progress
   xhr.upload.onprogress = function (event) {
     // find the percentage of uploaded
-    event.preventDefault();
     let percent = Math.round((100 * event.loaded) / event.total);
     progressPercent.innerText = percent;
     const scaleX = `scaleX(${percent / 100})`;
@@ -107,15 +99,13 @@ const uploadFile = (e) => {
   };
 
   // handle error
-  xhr.upload.onerror = function (e) {
-    e.preventDefault();
+  xhr.upload.onerror = function () {
     showToast(`Error in upload: ${xhr.status}.`);
     fileInput.value = ""; // reset the input
   };
 
   // listen for response which will give the link
-  xhr.onreadystatechange = function (e) {
-    e.preventDefault();
+  xhr.onreadystatechange = function () {
     if (xhr.readyState == XMLHttpRequest.DONE) {
       onFileUploadSuccess(xhr.responseText);
     }
